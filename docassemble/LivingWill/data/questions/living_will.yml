@@ -1,0 +1,598 @@
+metadata:
+  title: Living will
+  short title: Living will
+  comment: This program helps you create a will that says what type of medical treatment you do and do not want if you are in a terminal condition and cannot make your own medical decisions.
+---
+include:
+  - docassemble.AssemblyLine:assembly_line.yml
+  - docassemble.ALToolbox:phone-number-validation.yml
+  - docassemble.ILAO:ilao-interview-framework.yml
+  - docassemble.ILAO:shared-basic-questions.yml
+---
+objects:
+  - user: ALIndividual
+  - witness: ALPeopleList
+  - court_list: ALCourtLoader.using(file_name='docassemble.ILAO:data/sources/il_courts.xlsx')
+---
+code: |
+  ilao_easy_form_title = "Living will"
+  ilao_easy_form_url = "https://www.illinoislegalaid.org/legal-information/living-will"
+  github_user = 'IllinoisLegalAidOnline'
+  github_repo_name = 'docassemble-LivingWill'
+---
+sections:
+  - review_answers: Review your answers
+---
+sections:
+  - section_intro: Start
+  - section_qualify: Qualifications
+  - section_preference: Preferences
+  - section_witness: Witnesses
+  - section_user: About you
+  - section_download: Download
+---
+# interview order block
+mandatory: True
+code: |
+  nav.set_section('section_intro')
+  sees_nav_bar
+  set_progress(5)
+  how_to_use
+  accept_terms
+  will_explainer
+  set_progress(20)
+  nav.set_section('section_qualify')
+  can_use
+  can_not_use
+  if in_illinois == False:
+    out_of_state
+  set_progress(40)
+  nav.set_section('section_preference')
+  death_delaying
+  feeding_tube
+  set_progress(60)
+  nav.set_section('section_witness')
+  if witness[0].known == True:
+    witness[0].name.first
+    if witness[0].location_known == True:
+      witness[0].address.address
+    if witness[1].known == True:
+      witness[1].name.first
+      if witness[1].location_known == True:
+        witness[1].address.address
+  set_progress(80)
+  nav.set_section('section_user')
+  user.name.first
+  user.address.address
+  county
+  set_progress(100)
+  nav.set_section('section_download')
+  get_docs_screen
+---
+id: welcome
+question: |
+  Living will
+subquestion: |
+  Welcome to Illinois Legal Aid Online's **Living will** Easy Form.
+
+  This program helps you create a will that says what type of medical treatment you do and do not want if you are in a terminal condition and cannot make your own medical decisions.
+field: sees_nav_bar
+---
+id: instructions
+continue button field: how_to_use
+question: |
+  Instructions
+subquestion: |
+  You can use this program if you know what kind of medical treatment you want if you ever have a terminal illness or injury that prevents you from making your own medical decisions.
+  
+  To use this program, you will need the names and addresses of 2 people who can witness you sign the form.
+
+  Set aside 5 to 10 minutes to finish this program. You can log in and save your work to return to later. 
+
+  After you download your living will, you will need to sign and date it with your witnesses. Your witnesses must be with you when you sign the living will.
+  
+  ${ collapse_template(help_example) }  
+
+  Click on **{green words :question-circle:}** to learn what they mean. Some questions have a ${ fa_icon("question-circle", color_css="#0dcaf0" ) } that also gives help.
+---
+template: help_example
+
+subject: |
+
+  **You can expand sections like this to show more information.**
+
+content: |  
+
+  This is an example of help. Click again to hide.
+---
+id: accept terms
+question: |
+  Terms of use
+subquestion: |
+  This program does not provide legal advice. It does not take the place of advice from a lawyer.
+
+  Using this program does not create an attorney-client relationship between you and Illinois Legal Aid Online or its employees.
+
+  ${ collapse_template(get_legal_help) }  
+
+fields:
+  - To continue, you must accept the [terms of use](https://www.illinoislegalaid.org/about/terms-of-use).: accept
+    datatype: checkboxes
+    none of the above: False
+    minlength: 1
+    choices:
+      - I accept the terms of use.
+    validation messages:
+      minlength: |
+        You cannot continue unless you agree to the terms of use.
+continue button field: accept_terms
+---
+template: get_legal_help
+subject: |
+  **What if I need legal advice?**
+content: |  
+  If you have questions or concerns about your legal problem and want legal advice you should talk to a lawyer.
+ 
+  Use [Get Legal Help](https://www.illinoislegalaid.org/get-legal-help) to find free or low-cost legal services in your area.
+---
+id: explainer
+continue button field: will_explainer
+question: |
+  Living will
+subquestion: |
+  A living will is a document that tells your doctor and your family what your wishes about end-of-life medical care are in case you get a **{terminal condition :question-circle:}**
+  
+  Your living will is only used if you can't tell your doctor that you do not want medical care which will only make you live longer but won't heal you. For example, you might be in a coma, and there is no medical care that will wake you up, or keep you from dying. 
+  
+  Learn more about [living wills](https://www.illinoislegalaid.org/legal-information/creating-living-will).
+terms:
+  phrases:
+      - 'terminal condition :question-circle:'
+  definition: |
+    An illness or injury is a terminal condition if it will cause death and it cannot be cured or reversed.  
+---
+id: your name
+question: |
+  What is your name?
+fields:
+  - First: user.name.first
+  - Middle: user.name.middle
+    required: False
+  - Last: user.name.last
+---
+id: in illinois
+question: |
+  Are you a resident of Illinois?
+fields:
+  - no label: in_illinois
+    datatype: yesnoradio
+---
+id: not in illinois
+event: out_of_state
+question: |
+  Sorry
+subquestion: |
+  You must be a resident of Illinois to use this program.
+buttons:
+  - Exit: exit
+  - Restart: restart
+---
+id: your address
+question: |
+  What is your current address?
+fields:
+  - Street address: user.address.address
+    address autocomplete: True
+  - Address line 2: user.address.unit
+    required: False
+  - City: user.address.city
+  - State: user.address.state
+    code: |
+      states_list() 
+  - ZIP code: user.address.zip
+---
+id: your county
+continue button field: county
+question: |
+  What county do you live in?
+subquestion: |
+  ${ collapse_template(county_lookup_help) }  
+fields:
+  - no label: trial_court_index
+    code: |
+      court_county_lookup()
+---
+code: |
+  def court_county_lookup():
+    all_court_counties = court_list._load_courts()['address_county'].items()
+    filtered_courts = [(-1, "Cook")]
+    for court in all_court_counties:
+      if court[1] != "Cook":
+        filtered_courts.append(court)
+    return sorted( filtered_courts, key=lambda y: y[1])
+---
+depends on:
+  - trial_court_index
+code: |
+  if trial_court_index == "-1":
+    
+    trial_court = court_list.as_court('trial_court', 15)
+  else:
+    trial_court = court_list.as_court('trial_court', trial_court_index)
+---
+template: county_lookup_help
+subject: |
+  **How do I look up the county?**
+content: |  
+  You can use this [City-to-County Finder](https://www.statsamerica.org/CityCountyFinder/) to find the county.
+---
+code: |
+  allowed_courts = ['Circuit']
+---
+#depends on:
+#  - trial_court_index
+#code: |
+#  user_county = court_list.as_court('trial_court', trial_court_index)
+---
+id: explanation
+continue button field: death_delaying
+question: |
+  Death delaying procedures
+subquestion: |
+  Some medical care can keep you alive but cannot improve your health. This type of care is known as death delaying procedures.
+
+  Some examples of death delaying procedures are:
+  
+  * Assisted ventilation, 
+  * Artificial kidney treatments,  
+  * Intravenous feeding or medication, 
+  * Blood transfusions,
+  * Tube feeding,
+  * Cardiac resuscitation, and
+  * Amputation.
+  
+  Some medical care, such as painkillers, keeps you comfortable. Such medical care is not a death delaying procedure.
+  
+  ${ collapse_template(what_if) } 
+---
+template: what_if
+subject: |
+  **What if I want some death delaying procedures but not others?**
+content: |
+  Any detailed treatment plan is best discussed with your doctor.
+
+  You can draft an individualized treatment plan with your doctor using the POLST (Practitioner Orders for Life - Sustaining Treatment) form. [Learn more about POLST](https://www.illinoislegalaid.org/legal-information/using-polst-form-end-life-decision-making)
+---
+id: nutrition
+question: |
+  Do you want to be given a feeding tube if you have a terminal condition?
+subquestion: |
+  Medical care providing food and water can be death delaying procedures. This can include tube feeding or IV drips for someone with a **{terminal condition :question-circle:}**
+
+  However, withholding food or water may result in death only due to starvation or dehydration. A living will does not normally allow a doctor to withhold food and water in such a case.
+  
+  If you select **No**, you will need to initial the paragraph saying you do not want a feeding tube.
+fields:
+  - no label: feeding_tube
+    datatype: yesnoradio
+terms:
+  phrases:
+      - 'terminal condition :question-circle:'
+  definition: |
+    An illness or injury is a terminal condition if it will cause death and it cannot be cured or reversed.  
+---
+id: can use
+continue button field: can_use
+question: |
+  When doctors can use your living will
+subquestion: |
+  Your doctor **can** follow your living will if **all** of the following are true:
+  
+  * You have been diagnosed with a **{terminal condition :question-circle:}**, 
+  * Your doctor confirms you have a terminal condition in your written medical record, and
+  * You are not able to tell the doctor what you want.
+terms:
+  phrases:
+      - 'terminal condition :question-circle:'
+  definition: |
+    An illness or injury is a terminal condition if it will cause death and it cannot be cured or reversed.  
+---
+template: terminal
+subject: |
+  **What is a terminal condition?**
+content: |
+  An illness or injury is a terminal condition if:
+  
+  * It will cause death, and  
+  * it cannot be cured or reversed.
+---
+id: can not use
+continue button field: can_not_use
+question: |
+  When doctors can not use your living will
+subquestion: |
+  Your doctor **can** **not** follow your living will if **any** of the following is true:
+  
+  * Your condition is not terminal, 
+  * You have named someone power of attorney and they are able to make decisions for you, or
+  * You are pregnant and your doctor determines that your fetus could live.
+
+  If you are an organ donor, your doctor can give you care to protect your organs.
+---
+#id: sign date
+#question: |
+#  When will you sign your living will declaration?
+#subquestion: |
+#  If you are not sure, leave the answer blank.
+#fields:
+#  - Signing date: sign_date
+#    datatype: date
+#    min: ${ today()}
+#    required: False
+---
+id: witnessing
+continue button field: witness_intro
+question: |
+  Do you know who will be your ${ ordinal(i) } witness?
+subquestion: |
+  You will need to have two witnesses sign the living will with you. You don't need to know who your witnesses will be right now, but your witnesses must be eligible to be witnesses.
+  
+  If you do not yet know who will be your witnesses, you can add their names when you sign your living will.
+  
+    ${ collapse_template(witness_eligible) } 
+fields:
+  - no label: witness[i].known
+    datatype: yesnoradio
+---
+template: witness_eligible
+subject: |
+  **Who cannot serve as a witness?**
+content: |
+  The following people may **not** serve as one of your witnesses:
+
+  * Anyone who will inherit from you, and
+  * Anyone who is providing you with any care or treatment.
+---
+id: witness name
+question: |
+  What is the name of your ${ ordinal(i) } witness?
+fields:
+  - First: witness[i].name.first
+  - Middle: witness[i].name.middle
+    required: False
+  - Last: witness[i].name.last  
+---
+id: address known
+question: |
+  Do you know ${witness[i].name.full(middle="full") }'s address?
+fields:
+  - no label: witness[i].location_known
+    datatype: yesnoradio
+---
+id: witness address
+question: |
+  What is ${witness[i].name.full(middle="full") }'s address?
+fields:
+  - Street address: witness[i].address.address
+    address autocomplete: True
+  - Address line 2: witness[i].address.unit
+    required: False
+  - City: witness[i].address.city
+  - State: witness[i].address.state
+    code: |
+      states_list() 
+  - ZIP code: witness[i].address.zip
+---
+id: get docs screen
+event: get_docs_screen
+question: |
+  Download
+subquestion: |
+  Your letter is ready. View and download your letter and instructions below. Click **Make changes** to fix any mistakes.
+  
+  The Instructions page included with your forms will tell you what to do next.
+
+  Thank you for using ILAO Easy Forms!
+  
+  ${ action_button_html(url_action('review_answers'), label=':edit: Make changes', color='success', size="md") }
+
+  ${ al_user_bundle.download_list_html() }
+ 
+  &nbsp;
+
+  ${ al_user_bundle.send_button_html(show_editable_checkbox=False) }
+  
+  **Note:** This program does not send your letter. You will need to do this yourself.
+
+  Thank you for using ILAO Easy Forms!
+under: |
+  % if not user_logged_in():
+  [${fa_icon("sign-in-alt", color="#0079d0", size="sm")} Sign-in](${url_of('login', next=interview_url())}) or [register](${url_of('register', next=interview_url())}) an ILAO Easy Form account to save your progress (optional).
+  % endif
+
+ 
+  ${ action_button_html(interview_url(i="docassemble.ILAO:feedback.yml", easy_form_interview=ilao_easy_form_url, easy_form_title=ilao_easy_form_title, easy_form_page=user_info().question_id, easy_form_variable=user_info().variable, local=False,reset=1), label=':comment: Was this program helpful?', color="#181c36", size="md", new_window=True) }
+#buttons:
+  #- Exit: exit
+---
+generic object: ALDocumentBundle
+template: x.send_email_template
+subject: |
+  Living will
+content: |
+  Your forms are attached.
+  
+  Thanks for using ILAO Easy Forms!
+  
+  [Illinois Legal Aid Online](https://www.illinoislegalaid.org)
+---
+attachment:
+  name: Living will
+  variable name: will[i]
+  filename: living_will
+  docx template file: Living_Will_DA_Template.docx
+---
+attachment:
+  name: Instructions for living will
+  variable name: instructions[i]
+  filename: instructions_for_living_will
+  docx template file: Living_Will_DA_Instructions.docx
+---
+objects:
+  - will: ALDocument.using(title="Living will", filename="will", enabled=True, has_addendum=False)
+  - instructions: ALDocument.using(title="Instructions", filename="instructions", enabled=True, has_addendum=False)
+---
+objects:
+  - al_user_bundle: ALDocumentBundle.using(elements=[instructions, will], filename="stop_wage_assignment.pdf", title="Download all forms")
+---
+id: review screen
+event: review_answers
+question: |
+  Review screen
+subquestion: |
+  Edit your answers below.
+review: 
+  - Edit: user.name.first
+    button: |
+      **Your name:**
+      ${user.name.full(middle="full")}
+  - Edit: user.address.address
+    button: |
+      **Your address:**
+      ${user.address.on_one_line(bare=True)}
+  - Edit: 
+      - trial_court_index
+      - recompute:
+        - trial_court
+    button: |
+      **Your county:**
+      ${ trial_court.address.county }
+  - Edit: feeding_tube
+    button: |
+      **Do you want to be given a feeding tube?**
+      ${ word(yesno(feeding_tube)) }
+#  - Edit: sign_date
+#    button: |
+#      **Signing date:**
+#      ${ sign_date }
+  - Edit: witness[0].known
+    button: |
+      **Do you who will be your first witness?**
+      ${ word(yesno(witness[0].known)) }
+  - Edit: witness[0].name.first
+    button: |
+      **First witness:**
+      ${witness[0].name.full(middle="full")}
+    show if: witness[0].known
+  - Edit: witness[0].location_known
+    button: |
+      **Do you know ${witness[0].name.full(middle="full")}'s address?**
+      ${ word(yesno(witness[0].location_known)) }   
+    show if: witness[0].known
+  - Edit: witness[0].address.address
+    button: |
+      **${witness[0].name.full(middle="full")}'s address:**
+      ${witness[0].address.on_one_line(bare=True)}
+    show if: witness[0].location_known and witness[0].known
+  - Edit: witness[1].known
+    button: |
+      **Do you who will be your second witness?**
+      ${ word(yesno(witness[1].known)) }
+    show if: witness[0].known
+  - Edit: witness[1].name.first
+    button: |
+      **Second witness:**
+      ${witness[1].name.full(middle="full")}
+    show if: witness[1].known
+  - Edit: witness[1].location_known
+    button: |
+      **Do you know ${witness[1].name.full(middle="full")}'s address?**
+      ${ word(yesno(witness[1].location_known)) }   
+    show if: witness[1].known
+  - Edit: witness[1].address.address
+    button: |
+      **${witness[1].name.full(middle="full")}'s address:**
+      ${witness[1].address.on_one_line(bare=True)}
+    show if: witness[1].location_known and witness[1].known
+---
+id: section_preference
+event: section_preference
+question: |
+  Preferences
+subquestion: |
+  Edit your answers below.
+review:
+  - Edit: feeding_tube
+    button: |
+      **Do you want to be given a feeding tube?**
+      ${ word(yesno(feeding_tube)) }
+---
+id: section_witness
+event: section_witness
+question: |
+  Witnesses
+subquestion: |
+  Edit your answers below.
+review:
+  - Edit: witness[0].known
+    button: |
+      **Do you who will be your first witness?**
+      ${ word(yesno(witness[0].known)) }
+  - Edit: witness[0].name.first
+    button: |
+      **First witness:**
+      ${witness[0].name.full(middle="full")}
+    show if: witness[0].known
+  - Edit: witness[0].location_known
+    button: |
+      **Do you know ${witness[0].name.full(middle="full")}'s address?**
+      ${ word(yesno(witness[0].location_known)) }   
+    show if: witness[0].known
+  - Edit: witness[0].address.address
+    button: |
+      **${witness[0].name.full(middle="full")}'s address:**
+      ${witness[0].address.on_one_line(bare=True)}
+    show if: witness[0].location_known and witness[0].known
+  - Edit: witness[1].known
+    button: |
+      **Do you who will be your second witness?**
+      ${ word(yesno(witness[1].known)) }
+    show if: witness[0].known
+  - Edit: witness[1].name.first
+    button: |
+      **Second witness:**
+      ${witness[1].name.full(middle="full")}
+    show if: witness[1].known
+  - Edit: witness[1].location_known
+    button: |
+      **Do you know ${witness[1].name.full(middle="full")}'s address?**
+      ${ word(yesno(witness[1].location_known)) }   
+    show if: witness[1].known
+  - Edit: witness[1].address.address
+    button: |
+      **${witness[1].name.full(middle="full")}'s address:**
+      ${witness[1].address.on_one_line(bare=True)}
+    show if: witness[1].location_known and witness[1].known
+---
+id: section_user
+event: section_user
+question: |
+  About you
+subquestion: |
+  Edit your answers below.
+review:
+  - Edit: user.name.first
+    button: |
+      **Your name:**
+      ${user.name.full(middle="full")}
+  - Edit: user.address.address
+    button: |
+      **Your address:**
+      ${user.address.on_one_line(bare=True)}
+  - Edit: 
+      - trial_court_index
+      - recompute:
+        - trial_court
+    button: |
+      **Your county:**
+      ${ trial_court.address.county }
