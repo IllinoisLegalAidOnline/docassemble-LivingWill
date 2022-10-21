@@ -2,6 +2,9 @@ metadata:
   title: Living will
   short title: Living will
   comment: This program helps you create a will that says what type of medical treatment you do and do not want if you are in a terminal condition and cannot make your own medical decisions.
+  authors:
+    - Vivian McNaughton
+    - Matt Newsted
 ---
 include:
   - docassemble.AssemblyLine:assembly_line.yml
@@ -25,8 +28,8 @@ sections:
 ---
 sections:
   - section_intro: Start
-  - section_qualify: Qualifications
-  - section_preference: Preferences
+  #- section_qualify: Qualifications
+  - section_preference: Medical care
   - section_witness: Witnesses
   - section_user: About you
   - section_download: Download
@@ -41,7 +44,7 @@ code: |
   accept_terms
   will_explainer
   set_progress(20)
-  nav.set_section('section_qualify')
+  #nav.set_section('section_qualify')
   can_use
   can_not_use
   if in_illinois == False:
@@ -518,7 +521,7 @@ review:
 id: section_preference
 event: section_preference
 question: |
-  Preferences
+  Medical care
 subquestion: |
   Edit your answers below.
 review:
