@@ -317,10 +317,18 @@ subquestion: |
   Your doctor **can** **not** follow your living will if **any** of the following is true:
   
   * Your condition is not terminal, 
-  * You have named someone power of attorney and they are able to make decisions for you, or
+  * You have named someone power of attorney for health care and they are able to make decisions for you, or
   * You are pregnant and your doctor determines that your fetus could live.
 
   If you are an organ donor, your doctor can give you care to protect your organs.
+  
+  ${ collapse_template(has_poa) } 
+---
+template: has_poa
+subject: |
+  **I have a power of attorney. Should I still make a living will?**
+content: |
+  A living will can still be useful if you have a power of attorney. If your agent is not available to make decisions or the power of attorney doctor would rely on your living will. Also, a living will can tell your agent, family, and doctor what treatments you would prefer.
 ---
 #id: sign date
 #question: |
