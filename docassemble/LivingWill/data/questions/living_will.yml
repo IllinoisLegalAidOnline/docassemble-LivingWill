@@ -143,7 +143,7 @@ continue button field: will_explainer
 question: |
   Living will
 subquestion: |
-  A living will is a document that tells your doctor and your family what your wishes about end-of-life medical care are in case you get a **{terminal condition :question-circle:}**
+  A living will is a document that tells your doctor and your family what your wishes are about end-of-life medical care in case you get a **{terminal condition :question-circle:}**
   
   Your living will is only used if you can't tell your doctor that you do not want medical care which will only make you live longer but won't heal you. For example, you might be in a coma, and there is no medical care that will wake you up, or keep you from dying. 
   
@@ -270,7 +270,7 @@ id: nutrition
 question: |
   Do you want to be given a feeding tube if you have a terminal condition?
 subquestion: |
-  Medical care providing food and water can be death delaying procedures. This can include tube feeding or IV drips for someone with a **{terminal condition :question-circle:}**
+  Medical care providing food and water can be death delaying procedures. This can include tube feeding or IV drips for someone with a terminal condition.
 
   However, withholding food or water may result in death only due to starvation or dehydration. A living will does not normally allow a doctor to withhold food and water in such a case.
   
@@ -291,7 +291,7 @@ question: |
 subquestion: |
   Your doctor **can** follow your living will if **all** of the following are true:
   
-  * You have been diagnosed with a **{terminal condition :question-circle:}**, 
+  * You have been diagnosed with a terminal condition, 
   * Your doctor confirms you have a terminal condition in your written medical record, and
   * You are not able to tell the doctor what you want.
 terms:
@@ -312,12 +312,12 @@ content: |
 id: can not use
 continue button field: can_not_use
 question: |
-  When doctors can not use your living will
+  When doctors cannot use your living will
 subquestion: |
-  Your doctor **can** **not** follow your living will if **any** of the following is true:
+  Your doctor **cannot** follow your living will if **any** of the following is true:
   
   * Your condition is not terminal, 
-  * You have named someone power of attorney for health care and they are able to make decisions for you, or
+  * You given someone power of attorney for health care and they are able to make decisions for you, or
   * You are pregnant and your doctor determines that your fetus could live.
 
   If you are an organ donor, your doctor can give you care to protect your organs.
@@ -344,13 +344,16 @@ content: |
 id: witnessing
 continue button field: witness_intro
 question: |
-  Do you know who will be your ${ ordinal(i) } witness?
+  Do you know who your ${ ordinal(i) } witness will be?
 subquestion: |
-  You will need to have two witnesses sign the living will with you. You don't need to know who your witnesses will be right now, but your witnesses must be eligible to be witnesses.
+  You will need to have two witnesses sign the living will with you. You don't need to know who your witnesses will be right now, but they must be eligible to be witnesses.
   
   If you do not yet know who will be your witnesses, you can add their names when you sign your living will.
   
-    ${ collapse_template(witness_eligible) } 
+  The following people may **not** serve as one of your witnesses:
+
+  * Anyone who will inherit from you, and
+  * Anyone who is providing you with any care or treatment.
 fields:
   - no label: witness[i].known
     datatype: yesnoradio
@@ -488,7 +491,7 @@ review:
 #      ${ sign_date }
   - Edit: witness[0].known
     button: |
-      **Do you who will be your first witness?**
+      **Do you know who your first witness will be?**
       ${ word(yesno(witness[0].known)) }
   - Edit: witness[0].name.first
     button: |
@@ -507,9 +510,9 @@ review:
     show if: witness[0].location_known and witness[0].known
   - Edit: witness[1].known
     button: |
-      **Do you who will be your second witness?**
+      **Do you who your second witness will be?**
       ${ word(yesno(witness[1].known)) }
-    show if: witness[0].known
+    show if: defined('witness[1].known')
   - Edit: witness[1].name.first
     button: |
       **Second witness:**
@@ -547,7 +550,7 @@ subquestion: |
 review:
   - Edit: witness[0].known
     button: |
-      **Do you who will be your first witness?**
+      **Do you know who your first witness will be?**
       ${ word(yesno(witness[0].known)) }
   - Edit: witness[0].name.first
     button: |
@@ -566,9 +569,9 @@ review:
     show if: witness[0].location_known and witness[0].known
   - Edit: witness[1].known
     button: |
-      **Do you who will be your second witness?**
+      **Do you who your second witness will be?**
       ${ word(yesno(witness[1].known)) }
-    show if: witness[0].known
+    show if: defined('witness[1].known')
   - Edit: witness[1].name.first
     button: |
       **Second witness:**
