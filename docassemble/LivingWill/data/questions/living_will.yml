@@ -96,7 +96,7 @@ subquestion: |
   
   ${ collapse_template(help_example) }  
 
-  Click on **{green words :question-circle:}** to learn what they mean. Some questions have a ${ fa_icon("question-circle", color_css="#0dcaf0" ) } that also gives help.
+  Click on **{green words}** to learn what they mean. Some questions have a ${ fa_icon("question-circle", color_css="#0dcaf0" ) } that also gives help.
 ---
 template: help_example
 
@@ -143,14 +143,14 @@ continue button field: will_explainer
 question: |
   Living will
 subquestion: |
-  A living will is a document that tells your doctor and your family what your wishes are about end-of-life medical care in case you get a **{terminal condition :question-circle:}**
+  A living will is a document that tells your doctor and your family what your wishes are about end-of-life medical care in case you get a **{terminal condition}**
   
-  Your living will is only used if you can't tell your doctor that you do not want medical care which will only make you live longer but won't heal you. For example, you might be in a coma, and there is no medical care that will wake you up, or keep you from dying. 
+  Your living will is only used if you cannot tell your doctor that you do not want medical care which will only make you live longer but will not heal you. For example, you might be in a coma, and there is no medical care that will wake you up, or keep you from dying. 
   
   Learn more about [living wills](https://www.illinoislegalaid.org/legal-information/creating-living-will).
 terms:
   phrases:
-      - 'terminal condition :question-circle:'
+      - 'terminal condition'
   definition: |
     An illness or injury is a terminal condition if it will cause death and it cannot be cured or reversed.  
 ---
@@ -227,7 +227,7 @@ template: county_lookup_help
 subject: |
   **How do I look up the county?**
 content: |  
-  You can use this [City-to-County Finder](https://www.statsamerica.org/CityCountyFinder/) to find the county.
+  You can use this [**City-to-County Finder**](https://www.statsamerica.org/CityCountyFinder/) to find the county.
 ---
 code: |
   allowed_courts = ['Circuit']
@@ -264,7 +264,7 @@ subject: |
 content: |
   Any detailed treatment plan is best discussed with your doctor.
 
-  You can draft an individualized treatment plan with your doctor using the POLST (Practitioner Orders for Life - Sustaining Treatment) form. [Learn more about POLST](https://www.illinoislegalaid.org/legal-information/using-polst-form-end-life-decision-making)
+  You can draft an individualized treatment plan with your doctor using the POLST (Practitioner Orders for Life - Sustaining Treatment) form. [**Learn more about POLST**](https://www.illinoislegalaid.org/legal-information/using-polst-form-end-life-decision-making)
 ---
 id: nutrition
 question: |
@@ -280,7 +280,7 @@ fields:
     datatype: yesnoradio
 terms:
   phrases:
-      - 'terminal condition :question-circle:'
+      - 'terminal condition'
   definition: |
     An illness or injury is a terminal condition if it will cause death and it cannot be cured or reversed.  
 ---
@@ -296,7 +296,7 @@ subquestion: |
   * You are not able to tell the doctor what you want.
 terms:
   phrases:
-      - 'terminal condition :question-circle:'
+      - 'terminal condition'
   definition: |
     An illness or injury is a terminal condition if it will cause death and it cannot be cured or reversed.  
 ---
@@ -346,7 +346,7 @@ continue button field: witness_intro
 question: |
   Do you know who your ${ ordinal(i) } witness will be?
 subquestion: |
-  You will need to have two witnesses sign the living will with you. You don't need to know who your witnesses will be right now, but they must be eligible to be witnesses.
+  You will need to have two witnesses sign the living will with you. You do not need to know who your witnesses will be right now, but they must be eligible to be witnesses.
   
   If you do not yet know who will be your witnesses, you can add their names when you sign your living will.
   
@@ -379,6 +379,8 @@ fields:
 id: address known
 question: |
   Do you know ${witness[i].name.full(middle="full") }'s address?
+subquestion: |
+  If you do not know ${witness[i].name.full(middle="full") }'s address now, you can add it when they sign your living will.
 fields:
   - no label: witness[i].location_known
     datatype: yesnoradio
