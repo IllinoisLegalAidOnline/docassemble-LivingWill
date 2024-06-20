@@ -39,6 +39,7 @@ mandatory: True
 code: |
   nav.set_section('section_intro')
   sees_nav_bar
+  snapshot_start
   set_progress(5)
   how_to_use
   accept_terms
@@ -70,7 +71,34 @@ code: |
   county
   set_progress(100)
   nav.set_section('section_download')
+  forms_assembling
+  snapshot_forms
   get_docs_screen
+---
+code: |
+  stuff_to_snapshot = {
+  	'start_time': str(current_datetime().format_datetime()),
+  	'started_interview': True, 
+  	}
+    
+  stuff_to_snapshot['user_zip'] = showifdef('user.address.zip')
+
+  stuff_to_snapshot['downloaded_forms'] = showifdef('forms_assembling')
+  
+  stuff_to_snapshot['witness_one_known'] = showifdef('witness[0].known') 
+  
+  store_variables_snapshot(
+  	data=stuff_to_snapshot, persistent=True
+  	)
+  snapshot_interview_state = True
+---
+code: |
+  snapshot_interview_state
+  snapshot_start = True  
+---
+code: |
+  reconsider('snapshot_interview_state')
+  snapshot_forms = True
 ---
 id: welcome
 question: |
@@ -399,6 +427,17 @@ fields:
       states_list() 
   - ZIP code: witness[i].address.zip
 ---
+id: forms assembling
+continue button field: forms_assembling
+question: |
+  Almost done
+subquestion: |
+  After you click **Next**, it may take a few moments to finish making your forms.
+  
+  ###### You do not need to refresh your screen. Hang in there!
+  
+  [NEWLINE]
+---
 id: get docs screen
 event: get_docs_screen
 question: |
@@ -531,7 +570,7 @@ review:
       ${witness[1].address.on_one_line(bare=True)}
     show if: witness[1].location_known and witness[1].known
 ---
-id: section_preference
+id: preference review screen
 event: section_preference
 question: |
   Medical care
@@ -543,7 +582,7 @@ review:
       **Do you want to be given a feeding tube?**
       ${ word(yesno(feeding_tube)) }
 ---
-id: section_witness
+id: witness review screen
 event: section_witness
 question: |
   Witnesses
@@ -590,7 +629,7 @@ review:
       ${witness[1].address.on_one_line(bare=True)}
     show if: witness[1].location_known and witness[1].known
 ---
-id: section_user
+id: user review screen
 event: section_user
 question: |
   About you
