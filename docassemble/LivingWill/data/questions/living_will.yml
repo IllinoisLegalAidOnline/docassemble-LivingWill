@@ -129,13 +129,13 @@ subquestion: |
   
   ${ collapse_template(help_example) }  
 
-  Click on **{green words}** to learn what they mean. Some questions have a ${ fa_icon("question-circle", color_css="#0dcaf0" ) } that also gives help.
+  Click on **{green words}** to learn what they mean. Some pages have a ${ fa_icon("question-circle", color_css="#0dcaf0" ) } that helps explain things.
 ---
 template: help_example
 
 subject: |
 
-  **You can expand sections like this to show more information.**
+  **You can click sections like this to show more information.**
 
 content: |  
 
@@ -187,14 +187,23 @@ terms:
   definition: |
     An illness or injury is a terminal condition if it will cause death and it cannot be cured or reversed.  
 ---
-id: your name
+id: user name
 question: |
   What is your name?
+subquestion: |
+    If you don't have a first name and a last name, you can enter your name in the field labeled **First** and leave the other fields blank.
 fields:
   - First: user.name.first
   - Middle: user.name.middle
     required: False
   - Last: user.name.last
+    required: False
+  - Suffix: user.name.suffix
+    help: |
+      Some names have a suffix after the last name, such as "Senior," "III," or "Jr." If your name does not have a suffix, you can leave this blank.
+    code: |
+      name_suffix()
+    required: False
 ---
 id: in illinois
 question: |
@@ -403,11 +412,20 @@ content: |
 id: witness name
 question: |
   What is the name of your ${ ordinal(i) } witness?
+subquestion: |
+    If they don't have a first name and a last name, you can enter their name in the field labeled **First** and leave the other fields blank.
 fields:
   - First: witness[i].name.first
   - Middle: witness[i].name.middle
     required: False
   - Last: witness[i].name.last  
+    required: False
+  - Suffix: witness[i].name.suffix
+    help: |
+      Some names have a suffix after the last name, such as "Senior," "III," or "Jr." If your name does not have a suffix, you can leave this blank.
+    code: |
+      name_suffix()
+    required: False
 ---
 id: address known
 question: |
