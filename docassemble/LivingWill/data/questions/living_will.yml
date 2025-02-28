@@ -521,7 +521,7 @@ objects:
   - instructions: ALDocument.using(title="Instructions", filename="instructions", enabled=True, has_addendum=False)
 ---
 objects:
-  - al_user_bundle: ALDocumentBundle.using(elements=[instructions, will], filename="stop_wage_assignment.pdf", title="Download all forms")
+  - al_user_bundle: ALDocumentBundle.using(elements=[instructions, will], filename="living_will.pdf", title="Download all forms")
 ---
 id: review screen
 event: review_answers
