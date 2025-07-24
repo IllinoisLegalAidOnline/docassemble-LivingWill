@@ -429,16 +429,16 @@ fields:
 ---
 id: address known
 question: |
-  Do you know ${witness[i].name.full(middle="full") }'s address?
+  Do you know ${witness[i].name_full() }'s address?
 subquestion: |
-  If you do not know ${witness[i].name.full(middle="full") }'s address now, you can add it when they sign your living will.
+  If you do not know ${witness[i].name_full() }'s address now, you can add it when they sign your living will.
 fields:
   - no label: witness[i].location_known
     datatype: yesnoradio
 ---
 id: witness address
 question: |
-  What is ${witness[i].name.full(middle="full") }'s address?
+  What is ${witness[i].name_full() }'s address?
 fields:
   - Street address: witness[i].address.address
     address autocomplete: True
@@ -533,7 +533,7 @@ review:
   - Edit: user.name.first
     button: |
       **Your name:**
-      ${user.name.full(middle="full")}
+      ${user.name_full()}
   - Edit: user.address.address
     button: |
       **Your address:**
@@ -560,16 +560,16 @@ review:
   - Edit: witness[0].name.first
     button: |
       **First witness:**
-      ${witness[0].name.full(middle="full")}
+      ${witness[0].name_full()}
     show if: witness[0].known
   - Edit: witness[0].location_known
     button: |
-      **Do you know ${witness[0].name.full(middle="full")}'s address?**
+      **Do you know ${witness[0].name_full()}'s address?**
       ${ word(yesno(witness[0].location_known)) }   
     show if: witness[0].known
   - Edit: witness[0].address.address
     button: |
-      **${witness[0].name.full(middle="full")}'s address:**
+      **${witness[0].name_full()}'s address:**
       ${witness[0].address.on_one_line(bare=True)}
     show if: witness[0].location_known and witness[0].known
   - Edit: witness[1].known
@@ -580,16 +580,16 @@ review:
   - Edit: witness[1].name.first
     button: |
       **Second witness:**
-      ${witness[1].name.full(middle="full")}
+      ${witness[1].name_full()}
     show if: witness[1].known
   - Edit: witness[1].location_known
     button: |
-      **Do you know ${witness[1].name.full(middle="full")}'s address?**
+      **Do you know ${witness[1].name_full()}'s address?**
       ${ word(yesno(witness[1].location_known)) }   
     show if: witness[1].known
   - Edit: witness[1].address.address
     button: |
-      **${witness[1].name.full(middle="full")}'s address:**
+      **${witness[1].name_full()}'s address:**
       ${witness[1].address.on_one_line(bare=True)}
     show if: witness[1].location_known and witness[1].known
 ---
@@ -619,16 +619,16 @@ review:
   - Edit: witness[0].name.first
     button: |
       **First witness:**
-      ${witness[0].name.full(middle="full")}
+      ${witness[0].name_full()}
     show if: witness[0].known
   - Edit: witness[0].location_known
     button: |
-      **Do you know ${witness[0].name.full(middle="full")}'s address?**
+      **Do you know ${witness[0].name_full()}'s address?**
       ${ word(yesno(witness[0].location_known)) }   
     show if: witness[0].known
   - Edit: witness[0].address.address
     button: |
-      **${witness[0].name.full(middle="full")}'s address:**
+      **${witness[0].name_full()}'s address:**
       ${witness[0].address.on_one_line(bare=True)}
     show if: witness[0].location_known and witness[0].known
   - Edit: witness[1].known
@@ -639,16 +639,16 @@ review:
   - Edit: witness[1].name.first
     button: |
       **Second witness:**
-      ${witness[1].name.full(middle="full")}
+      ${witness[1].name_full()}
     show if: witness[1].known
   - Edit: witness[1].location_known
     button: |
-      **Do you know ${witness[1].name.full(middle="full")}'s address?**
+      **Do you know ${witness[1].name_full()}'s address?**
       ${ word(yesno(witness[1].location_known)) }   
     show if: witness[1].known
   - Edit: witness[1].address.address
     button: |
-      **${witness[1].name.full(middle="full")}'s address:**
+      **${witness[1].name_full()}'s address:**
       ${witness[1].address.on_one_line(bare=True)}
     show if: witness[1].location_known and witness[1].known
 ---
@@ -662,7 +662,7 @@ review:
   - Edit: user.name.first
     button: |
       **Your name:**
-      ${user.name.full(middle="full")}
+      ${user.name_full()}
   - Edit: user.address.address
     button: |
       **Your address:**
