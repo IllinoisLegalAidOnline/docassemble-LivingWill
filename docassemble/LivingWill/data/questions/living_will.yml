@@ -1,7 +1,7 @@
 metadata:
   title: Living will
   short title: Living will
-  comment: This program helps you create a will that says what type of medical treatment you do and do not want if you are in a terminal condition and cannot make your own medical decisions.
+  comment: This Easy Form helps you create a will that says what type of medical treatment you do and do not want if you are in a terminal condition and cannot make your own medical decisions.
   authors:
     - Vivian McNaughton
     - Matt Newsted
@@ -15,7 +15,6 @@ include:
 objects:
   - user: ALIndividual
   - witness: ALPeopleList
-  - court_list: ALCourtLoader.using(file_name='docassemble.ILAO:data/sources/il_courts.xlsx')
 ---
 code: |
   ilao_easy_form_title = "Living will"
@@ -68,7 +67,7 @@ code: |
   nav.set_section('section_user')
   user.name.first
   user.address.address
-  county
+  home_county
   set_progress(100)
   nav.set_section('section_download')
   forms_assembling
@@ -180,7 +179,7 @@ subquestion: |
   
   Your living will is only used if you cannot tell your doctor that you do not want medical care which will only make you live longer but will not heal you. For example, you might be in a coma, and there is no medical care that will wake you up, or keep you from dying. 
   
-  To learn more, read ILAO's article about [**living wills**](https://www.illinoislegalaid.org/legal-information/creating-living-will).
+  To learn more, see ILAO's article on [**living wills**](https://www.illinoislegalaid.org/node/31806).
 terms:
   phrases:
       - 'terminal condition'
@@ -243,27 +242,9 @@ question: |
 subquestion: |
   ${ collapse_template(county_lookup_help) }  
 fields:
-  - no label: trial_court_index
+  - County: home_county
     code: |
-      court_county_lookup()
----
-code: |
-  def court_county_lookup():
-    all_court_counties = court_list._load_courts()['address_county'].items()
-    filtered_courts = [(-1, "Cook")]
-    for court in all_court_counties:
-      if court[1] != "Cook":
-        filtered_courts.append(court)
-    return sorted( filtered_courts, key=lambda y: y[1])
----
-depends on:
-  - trial_court_index
-code: |
-  if trial_court_index == "-1":
-    
-    trial_court = court_list.as_court('trial_court', 15)
-  else:
-    trial_court = court_list.as_court('trial_court', trial_court_index)
+      il_county_list
 ---
 template: county_lookup_help
 subject: |
@@ -273,11 +254,6 @@ content: |
 ---
 code: |
   allowed_courts = ['Circuit']
----
-#depends on:
-#  - trial_court_index
-#code: |
-#  user_county = court_list.as_court('trial_court', trial_court_index)
 ---
 id: explanation
 continue button field: death_delaying
@@ -306,7 +282,7 @@ subject: |
 content: |
   Any detailed treatment plan is best discussed with your doctor.
 
-  You can draft an individualized treatment plan with your doctor using the POLST (Practitioner Orders for Life - Sustaining Treatment) form. To learn more, read ILAO's article about [**POLST forms**](https://www.illinoislegalaid.org/legal-information/using-polst-form-end-life-decision-making).
+  You can draft an individualized treatment plan with your doctor using the POLST (Practitioner Orders for Life - Sustaining Treatment) form. To learn more, see ILAO's [**Using the POLST form for end of life decision making FAQ**](https://www.illinoislegalaid.org/node/175271).
 ---
 id: nutrition
 question: |
@@ -538,13 +514,10 @@ review:
     button: |
       **Your address:**
       ${user.address.on_one_line(bare=True)}
-  - Edit: 
-      - trial_court_index
-      - recompute:
-        - trial_court
+  - Edit: home_county
     button: |
       **Your county:**
-      ${ trial_court.address.county }
+      ${ home_county }
   - Edit: feeding_tube
     button: |
       **Do you want to be given a feeding tube?**
@@ -667,10 +640,7 @@ review:
     button: |
       **Your address:**
       ${user.address.on_one_line(bare=True)}
-  - Edit: 
-      - trial_court_index
-      - recompute:
-        - trial_court
+  - Edit: home_county
     button: |
       **Your county:**
-      ${ trial_court.address.county }
+      ${ home_county }
